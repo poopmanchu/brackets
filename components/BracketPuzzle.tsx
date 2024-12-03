@@ -3,8 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-const BracketPuzzle = () => {
-  const puzzleData = {
+interface Solutions {
+  [key: string]: string;
+}
+
+interface PuzzleData {
+  puzzle: string;
+  solutions: Solutions;
+}
+
+const BracketPuzzle: React.FC = () => {
+  const puzzleData: PuzzleData = {
     puzzle: "[smallest [[the world's largest [eldest [home of the suns] brother] by volume] service] number]",
     solutions: {
       "home of the suns": "phoenix",
@@ -48,7 +57,6 @@ const BracketPuzzle = () => {
     } : null;
   };
 
-  // Update current bracket on component mount and when state changes
   useEffect(() => {
     const innermost = findInnermostBracket(currentState);
     setCurrentBracket(innermost);
@@ -79,15 +87,15 @@ const BracketPuzzle = () => {
   };
 
   const renderPuzzleState = () => {
-    let text = currentState;
-    let result: JSX.Element[] = [];
+    const text = currentState;
+    const result: JSX.Element[] = [];
     let lastIndex = 0;
 
     const solutions = Array.from(solvedParts).sort((a, b) => b.length - a.length);
     
     while (lastIndex < text.length) {
       let found = false;
-      for (let solution of solutions) {
+      for (const solution of solutions) {
         const index = text.toLowerCase().indexOf(solution, lastIndex);
         if (index === lastIndex) {
           result.push(
@@ -102,7 +110,7 @@ const BracketPuzzle = () => {
       }
       if (!found) {
         let nextMatch = text.length;
-        for (let solution of solutions) {
+        for (const solution of solutions) {
           const index = text.toLowerCase().indexOf(solution, lastIndex);
           if (index > -1 && index < nextMatch) {
             nextMatch = index;
@@ -119,7 +127,6 @@ const BracketPuzzle = () => {
     return result;
   };
 
-  // Check if puzzle is completely solved by checking for any remaining brackets
   const isSolved = !currentState.includes('[');
 
   return (
